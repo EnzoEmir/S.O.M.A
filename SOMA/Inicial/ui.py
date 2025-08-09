@@ -3,14 +3,13 @@ from PySide6.QtWidgets import (
     QPushButton, QLabel, QSizePolicy
 )
 from PySide6.QtCore import Qt
-from SOMA.Inicial.controller import handle_view_agenda, handle_add_tarefa
-
+from SOMA.Inicial import controller
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Assistente Pessoal")
-        self.setFixedSize(300, 300)
+        self.resize(360, 420)
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -23,7 +22,6 @@ class MainWindow(QMainWindow):
         title.setStyleSheet("font-size: 20px; font-weight: bold;")
         layout.addWidget(title)
 
-        # Botões
         btn_agenda = QPushButton("Ver agenda")
         btn_add = QPushButton("Adicionar tarefa")
         btn_exit = QPushButton("❌ Sair")
@@ -35,7 +33,9 @@ class MainWindow(QMainWindow):
 
         central_widget.setLayout(layout)
 
-        # Conectar sinais aos slots
-        btn_agenda.clicked.connect(handle_view_agenda)
-        btn_add.clicked.connect(handle_add_tarefa)
+        btn_agenda.clicked.connect(lambda: controller.handle_view_agenda(self))
+        btn_add.clicked.connect(controller.handle_add_tarefa) # Não precisa de lambda pois não passa args
         btn_exit.clicked.connect(self.close)
+
+        # referência para a próxima janela
+        self.agenda_window = None
