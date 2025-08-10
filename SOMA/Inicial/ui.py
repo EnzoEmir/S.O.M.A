@@ -3,7 +3,7 @@ from PySide6.QtWidgets import (
     QPushButton, QLabel, QSizePolicy
 )
 from PySide6.QtCore import Qt
-from SOMA.Inicial import controller
+from SOMA.inicial import controller
 
 class MainWindow(QMainWindow):
     def __init__(self):

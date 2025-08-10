@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QMessageBox
-from SOMA.Agenda.ui import AgendaWindow 
+from SOMA.agenda.ui import AgendaWindow 
 
 def handle_view_agenda(main_window): 
     main_window.agenda_window = AgendaWindow()

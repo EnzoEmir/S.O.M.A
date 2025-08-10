@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QApplication
-from SOMA.Inicial.ui import MainWindow
+from SOMA.inicial.ui import MainWindow
 import sys
 
 def main():

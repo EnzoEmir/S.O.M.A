@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QCalendarWidget
 from PySide6.QtGui import QColor, QTextCharFormat
 from PySide6.QtCore import QDate
-from SOMA.Agenda import controller
+from SOMA.agenda import controller
+import json
 
 class AgendaWindow(QWidget):
     def __init__(self):
@@ -11,14 +12,23 @@ class AgendaWindow(QWidget):
 
         self.calendario = QCalendarWidget()
     
-        teste = QDate(2024, 1, 1)
-        hoje = QDate.currentDate()
-        formato_dia_especial = QTextCharFormat() 
+        formato_dias_importantes = QTextCharFormat() 
         cor_de_fundo = QColor("#a4bcdd")
-        formato_dia_especial.setBackground(cor_de_fundo)
-        self.calendario.setDateTextFormat(hoje, formato_dia_especial)
-        self.calendario.setDateTextFormat(teste, formato_dia_especial)
+        formato_dias_importantes.setBackground(cor_de_fundo)
 
+        try: 
+            with open("SOMA\minhas_datas.json", "r") as f:
+                lista_de_tarefas = json.load(f)
+        except FileNotFoundError: 
+            lista_de_tarefas = [] 
+            print("AVISO: Arquivo 'minhas_datas.json' não encontrado.")
+
+        
+        for tarefa in lista_de_tarefas:             
+            q_date = QDate.fromString(tarefa["date"], "dd-MM-yyyy")
+            
+            self.calendario.setDateTextFormat(q_date, formato_dias_importantes)
+        
         layout = QVBoxLayout()
         layout.addWidget(self.calendario)
         self.setLayout(layout)
