@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QCalendarWidget
-from SOMA.agenda import controller
+from SOMA.agenda import agenda_controller
 
 class AgendaWindow(QWidget):
     def __init__(self):
@@ -24,14 +24,14 @@ class AgendaWindow(QWidget):
         layout.addWidget(self.btn_unicos)
         layout.addWidget(self.btn_voltar)
         
-        self.controller = controller.Controller(self)
+        self.controller = agenda_controller.Controller(self)
 
         self.btn_todos.clicked.connect(lambda: self.controller.atualizar_filtro("all"))
         self.btn_diarios.clicked.connect(lambda: self.controller.atualizar_filtro("daily"))
         self.btn_semanais.clicked.connect(lambda: self.controller.atualizar_filtro("weekly"))
         self.btn_unicos.clicked.connect(lambda: self.controller.atualizar_filtro("single"))
         
-        self.btn_voltar.clicked.connect(lambda: controller.voltar_main(self))
+        self.btn_voltar.clicked.connect(lambda: agenda_controller.voltar_main(self))
 
         self.calendario.currentPageChanged.connect(self.controller.atualizar_grifados)
 

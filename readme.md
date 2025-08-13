@@ -53,7 +53,7 @@ cd assistente-pessoal
 2. (Opcional) Crie e ative um ambiente virtual:
 
 ```bash
-python -m venv venv
+python -m venv .venv
 # Ative no Linux/macOS:
 source venv/bin/activate
 # Ou no Windows:
