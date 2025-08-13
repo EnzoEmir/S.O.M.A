@@ -1,7 +1,4 @@
-from PySide6.QtWidgets import (
-    QMainWindow, QWidget, QVBoxLayout,
-    QPushButton, QLabel, QSizePolicy
-)
+from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy
 from PySide6.QtCore import Qt
 from SOMA.inicial import controller
 

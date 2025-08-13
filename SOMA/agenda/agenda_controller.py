@@ -62,6 +62,13 @@ class Controller:
                     if data_atual.dayOfWeek() == dia_semana:
                         self.view.calendario.setDateTextFormat(data_atual, self.formato_dias_importantes)
 
+    def abrir_janela_adicionar(self):
+        from SOMA.agenda.adicionar_tarefa_ui import AdicionarTarefaWindow 
+
+        data_selecionada = self.view.calendario.selectedDate()
+        self.janela_adicionar = AdicionarTarefaWindow(self.view, data_selecionada)
+        self.janela_adicionar.show()
+
 
 def voltar_main(current_window):
     from SOMA.inicial.ui import MainWindow

@@ -13,6 +13,7 @@ class AgendaWindow(QWidget):
         self.btn_diarios = QPushButton("Diários")
         self.btn_semanais = QPushButton("Semanais")
         self.btn_unicos = QPushButton("Evento Único")
+        self.btn_adicionar = QPushButton("➕ Adicionar Tarefa")
         self.btn_voltar = QPushButton("❌ Voltar")
 
         layout = QVBoxLayout(self) 
@@ -22,6 +23,7 @@ class AgendaWindow(QWidget):
         layout.addWidget(self.btn_diarios)
         layout.addWidget(self.btn_semanais)
         layout.addWidget(self.btn_unicos)
+        layout.addWidget(self.btn_adicionar)
         layout.addWidget(self.btn_voltar)
         
         self.controller = agenda_controller.Controller(self)
@@ -30,6 +32,7 @@ class AgendaWindow(QWidget):
         self.btn_diarios.clicked.connect(lambda: self.controller.atualizar_filtro("daily"))
         self.btn_semanais.clicked.connect(lambda: self.controller.atualizar_filtro("weekly"))
         self.btn_unicos.clicked.connect(lambda: self.controller.atualizar_filtro("single"))
+        self.btn_adicionar.clicked.connect(self.controller.abrir_janela_adicionar)
         
         self.btn_voltar.clicked.connect(lambda: agenda_controller.voltar_main(self))
 
