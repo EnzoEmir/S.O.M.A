@@ -13,6 +13,8 @@ class Controller:
         self.formato_dias_importantes.setBackground(QColor("#a4bcdd"))
         self.formato_dias_importantes.setFontWeight(QFont.Bold)
         
+        self.view.calendario.activated.connect(self.abrir_janela_adicionar)         # duplo clique no calendário 
+
         self.carregar_tarefas_json()
         self.atualizar_grifados()
 
