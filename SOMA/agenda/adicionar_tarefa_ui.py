@@ -1,5 +1,4 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QLabel, QCheckBox, QMessageBox
-from PySide6.QtCore import QDate
 import json
 import os
 
@@ -8,6 +7,7 @@ class AdicionarTarefaWindow(QWidget):
         super().__init__()
         self.agenda_window = agenda_window
         self.data_selecionada = data_selecionada
+        self.tarefa_adicionada = None 
         self.setWindowTitle("Adicionar Nova Tarefa")
         self.resize(400, 250)
 
@@ -129,6 +129,9 @@ class AdicionarTarefaWindow(QWidget):
             
             self.agenda_window.controller.carregar_tarefas_json()
             self.agenda_window.controller.atualizar_grifados()
+            
+            if self.tarefa_adicionada:
+                self.tarefa_adicionada()
             
             self.close()
             

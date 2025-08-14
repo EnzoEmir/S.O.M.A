@@ -13,7 +13,7 @@ class Controller:
         self.formato_dias_importantes.setBackground(QColor("#a4bcdd"))
         self.formato_dias_importantes.setFontWeight(QFont.Bold)
         
-        self.view.calendario.activated.connect(self.abrir_janela_adicionar)         # duplo clique no calendário 
+        self.view.calendario.activated.connect(self.abrir_tarefas_do_dia)         # duplo clique no calendário 
 
         self.carregar_tarefas_json()
         self.atualizar_grifados()
@@ -70,6 +70,13 @@ class Controller:
         data_selecionada = self.view.calendario.selectedDate()
         self.janela_adicionar = AdicionarTarefaWindow(self.view, data_selecionada)
         self.janela_adicionar.show()
+
+    def abrir_tarefas_do_dia(self):
+        from SOMA.agenda.tarefas_do_dia_ui import TarefasDoDiaWindow
+
+        data_selecionada = self.view.calendario.selectedDate()
+        self.janela_tarefas = TarefasDoDiaWindow(self.view, data_selecionada)
+        self.janela_tarefas.show()
 
 
 def voltar_main(current_window):
