@@ -109,21 +109,27 @@ class AdicionarTarefaWindow(QWidget):
         }
 
         caminho_arquivo = "SOMA/minhas_datas.json"
-        tarefas = []
+        dados = {"tarefas": [], "atividades_concluidas": {}}
         
         try:
             if os.path.exists(caminho_arquivo):
                 with open(caminho_arquivo, "r", encoding="utf-8") as f:
-                    tarefas = json.load(f)
+                    dados = json.load(f)
+                        
+                    if "tarefas" not in dados:
+                        dados["tarefas"] = []
+                    if "atividades_concluidas" not in dados:
+                        dados["atividades_concluidas"] = {}
+                        
         except Exception as e:
             QMessageBox.warning(self, "Erro", f"Erro ao carregar arquivo: {e}")
             return
 
-        tarefas.append(nova_tarefa)
+        dados["tarefas"].append(nova_tarefa)
 
         try:
             with open(caminho_arquivo, "w", encoding="utf-8") as f:
-                json.dump(tarefas, f, ensure_ascii=False, indent=2)
+                json.dump(dados, f, ensure_ascii=False, indent=2)
             
             QMessageBox.information(self, "Sucesso", "Tarefa adicionada com sucesso!")
             

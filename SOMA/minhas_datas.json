@@ -1,22 +1,50 @@
-[
-  {
-    "description": "Almoço de família",
-    "date": "10-08-2025",
-    "type": "weekly"
-  },
-  {
-    "description": "Ler um livro",
-    "date": "17-08-2025",
-    "type": "daily"
-  },
-  {
-    "description": "Reunião de início de projeto",
-    "date": "18-08-2025",
-    "type": "single"
-  },
-  {
-    "description": "Entregar relatório",
-    "date": "18-09-2025",
-    "type": "single"
+{
+  "tarefas": [
+    {
+      "description": "Almoço de família",
+      "date": "10-08-2025",
+      "type": "weekly"
+    },
+    {
+      "description": "Reunião de início de projeto",
+      "date": "18-08-2025",
+      "type": "single"
+    },
+    {
+      "description": "Entregar relatório",
+      "date": "18-09-2025",
+      "type": "single"
+    },
+    {
+      "description": "teste",
+      "date": "19-08-2025",
+      "type": "single"
+    }
+  ],
+  "atividades_concluidas": {
+    "10-08-2025": {
+      "Almoço de família": {
+        "concluida": true,
+        "timestamp": "2025-08-15T02:38:09.542005"
+      }
+    },
+    "17-08-2025": {
+      "Almoço de família": {
+        "concluida": false,
+        "timestamp": "2025-08-15T02:33:14.023079"
+      }
+    },
+    "18-08-2025": {
+      "Reunião de início de projeto": {
+        "concluida": true,
+        "timestamp": "2025-08-15T02:33:16.039032"
+      }
+    },
+    "19-08-2025": {
+      "teste": {
+        "concluida": true,
+        "timestamp": "2025-08-14T21:07:03.657438"
+      }
+    }
   }
-]
+}

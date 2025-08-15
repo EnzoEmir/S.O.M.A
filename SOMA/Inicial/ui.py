@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         layout.addWidget(title)
 
         btn_agenda = QPushButton("Ver agenda")
-        btn_add = QPushButton("Adicionar tarefa")
+        btn_add = QPushButton("Gerenciar atividades do dia")
         btn_exit = QPushButton("❌ Sair")
 
         for btn in (btn_agenda, btn_add, btn_exit):
@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         central_widget.setLayout(layout)
 
         btn_agenda.clicked.connect(lambda: controller.handle_view_agenda(self))
-        btn_add.clicked.connect(controller.handle_add_tarefa) # Não precisa de lambda pois não passa args
+        btn_add.clicked.connect(lambda: controller.handle_gerenciar_atividade(self))
         btn_exit.clicked.connect(self.close)
 
         # referência para a próxima janela

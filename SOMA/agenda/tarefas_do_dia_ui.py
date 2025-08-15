@@ -12,20 +12,27 @@ class GerenciadorTarefas:
 
     def carregar(self):
         if not os.path.exists(self.caminho_arquivo):
-            return []
+            return {"tarefas": [], "atividades_concluidas": {}}
         try:
             with open(self.caminho_arquivo, "r", encoding="utf-8") as f:
-                return json.load(f)
+                dados = json.load(f)
+                
+                if "tarefas" not in dados:
+                    dados["tarefas"] = []
+                if "atividades_concluidas" not in dados:
+                    dados["atividades_concluidas"] = {}
+                return dados
+                    
         except (json.JSONDecodeError, FileNotFoundError):
-            return []
+            return {"tarefas": [], "atividades_concluidas": {}}
 
-    def salvar(self, tarefas):
+    def salvar(self, dados):
         try:
             with open(self.caminho_arquivo, "w", encoding="utf-8") as f:
-                json.dump(tarefas, f, ensure_ascii=False, indent=2)
+                json.dump(dados, f, ensure_ascii=False, indent=2)
             return True
         except Exception as e:
-            print(f"Erro ao salvar tarefas: {e}")
+            print(f"Erro ao salvar dados: {e}")
             return False
 
 class TarefasDoDiaWindow(QWidget):
@@ -73,8 +80,8 @@ class TarefasDoDiaWindow(QWidget):
 
     def carregar_tarefas_do_dia(self):
         self.lista_tarefas.clear()
-        todas_tarefas = self.gerenciador_tarefas.carregar()
-        tarefas_do_dia = self._filtrar_tarefas_do_dia(todas_tarefas)
+        dados = self.gerenciador_tarefas.carregar()
+        tarefas_do_dia = self._filtrar_tarefas_do_dia(dados["tarefas"])
 
         if not tarefas_do_dia:
             self.lista_tarefas.addItem("Nenhuma tarefa para este dia.")

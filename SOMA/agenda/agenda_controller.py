@@ -21,10 +21,22 @@ class Controller:
     def carregar_tarefas_json(self):
         try:
             with open("SOMA/minhas_datas.json", "r", encoding="utf-8") as f:
-                self.tarefas = json.load(f)
+                dados = json.load(f)
+                self.tarefas = dados.get("tarefas", [])
+                
+            self.limpar_atividades_orfas_automatico()
+                    
         except FileNotFoundError:
             self.tarefas = []
             print("AVISO: Arquivo 'minhas_datas.json' não encontrado.")
+    
+    def limpar_atividades_orfas_automatico(self):
+        try:
+            from SOMA.atividades.atividades_controller import AtividadesController
+            atividades_controller = AtividadesController()
+            atividades_controller.limpar_atividades_orfas()
+        except Exception as e:
+            print(f"Erro na limpeza automática: {e}")
     
     def atualizar_grifados(self):
         tipo_filtro = self.filtro_atual
