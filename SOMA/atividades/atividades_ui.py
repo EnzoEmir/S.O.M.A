@@ -141,11 +141,10 @@ class AtividadesWindow(QMainWindow):
             self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: #F44336; }")
     
     def atualizar_lista_atividades(self):
-        # Limpar layout existente
         for i in reversed(range(self.layout_atividades.count())):
-            child = self.layout_atividades.itemAt(i).widget()
-            if child:
-                child.deleteLater()
+            child = self.layout_atividades.itemAt(i)
+            if child and child.widget():
+                child.widget().setParent(None)
         
         tarefas = self.controller.obter_tarefas_do_dia(self.data_selecionada)
         

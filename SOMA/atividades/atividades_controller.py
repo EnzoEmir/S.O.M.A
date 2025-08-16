@@ -2,6 +2,7 @@ import json
 import os
 from datetime import datetime
 from PySide6.QtCore import QObject, Signal
+from PySide6.QtCore import QDate
 
 class AtividadesController(QObject):
     atividades_atualizadas = Signal()
@@ -66,16 +67,18 @@ class AtividadesController(QObject):
         tarefas_do_dia = []
         
         for tarefa in self.tarefas:
+            data_tarefa = QDate.fromString(tarefa["date"], "dd-MM-yyyy")
+            
             if tarefa["type"] == "single":
                 if tarefa["date"] == data_str:
                     tarefas_do_dia.append(tarefa)
             
             elif tarefa["type"] == "daily":
-                tarefas_do_dia.append(tarefa)
+                if data >= data_tarefa:
+                    tarefas_do_dia.append(tarefa)
             
             elif tarefa["type"] == "weekly":
-                data_tarefa = datetime.strptime(tarefa["date"], "%d-%m-%Y")
-                if data_tarefa.isoweekday() == dia_semana:
+                if data_tarefa.dayOfWeek() == dia_semana and data >= data_tarefa:
                     tarefas_do_dia.append(tarefa)
         
         return tarefas_do_dia

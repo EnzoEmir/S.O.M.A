@@ -66,14 +66,16 @@ class Controller:
             elif tipo_tarefa == "daily":
                 dias_no_mes = QDate(ano, mes, 1).daysInMonth()
                 for dia in range(1, dias_no_mes + 1):
-                    self.view.calendario.setDateTextFormat(QDate(ano, mes, dia), self.formato_dias_importantes)
+                    data_atual = QDate(ano, mes, dia)
+                    if data_atual >= data_original:
+                        self.view.calendario.setDateTextFormat(data_atual, self.formato_dias_importantes)
 
             elif tipo_tarefa == "weekly":
                 dia_semana = data_original.dayOfWeek()
                 dias_no_mes = QDate(ano, mes, 1).daysInMonth()
                 for dia in range(1, dias_no_mes + 1):
                     data_atual = QDate(ano, mes, dia)
-                    if data_atual.dayOfWeek() == dia_semana:
+                    if data_atual.dayOfWeek() == dia_semana and data_atual >= data_original:
                         self.view.calendario.setDateTextFormat(data_atual, self.formato_dias_importantes)
 
     def abrir_janela_adicionar(self):

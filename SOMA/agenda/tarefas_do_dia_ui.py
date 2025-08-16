@@ -103,11 +103,17 @@ class TarefasDoDiaWindow(QWidget):
             tipo = tarefa.get("type")
             data_tarefa = QDate.fromString(tarefa.get("date", ""), "dd-MM-yyyy")
             
-            is_today = (tipo == "single" and data_tarefa == self.data_selecionada) or \
-                       (tipo == "daily") or \
-                       (tipo == "weekly" and data_tarefa.dayOfWeek() == self.data_selecionada.dayOfWeek())
+            atualmente = False
             
-            if is_today:
+            if tipo == "single":
+                atualmente = data_tarefa == self.data_selecionada
+            elif tipo == "daily":
+                atualmente = self.data_selecionada >= data_tarefa
+            elif tipo == "weekly":
+                atualmente = (data_tarefa.dayOfWeek() == self.data_selecionada.dayOfWeek() and 
+                           self.data_selecionada >= data_tarefa)
+            
+            if atualmente:
                 tarefas_filtradas.append({"index": i, **tarefa})
         
         return tarefas_filtradas
