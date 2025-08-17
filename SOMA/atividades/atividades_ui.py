@@ -98,10 +98,6 @@ class AtividadesWindow(QMainWindow):
         self.btn_marcar_todas.clicked.connect(self.marcar_todas_concluidas)
         layout_botoes.addWidget(self.btn_marcar_todas)
         
-        self.btn_desmarcar_todas = QPushButton("Desmarcar Todas")
-        self.btn_desmarcar_todas.clicked.connect(self.desmarcar_todas)
-        layout_botoes.addWidget(self.btn_desmarcar_todas)
-        
         layout_atividades.addLayout(layout_botoes)
         
         panel_direito.addWidget(atividades_group)
@@ -112,7 +108,6 @@ class AtividadesWindow(QMainWindow):
     def conectar_signals(self):
         self.calendario.clicked.connect(self.data_selecionada_mudou)
         
-    
     def data_selecionada_mudou(self, data):
         self.data_selecionada = data
         self.atualizar_interface()
@@ -220,22 +215,6 @@ class AtividadesWindow(QMainWindow):
         
         QMessageBox.information(self, "Sucesso", 
                               f"Todas as {len(tarefas)} tarefas do dia foram marcadas como concluídas!")
-    
-    def desmarcar_todas(self):
-        tarefas = self.controller.obter_tarefas_do_dia(self.data_selecionada)
-        
-        if not tarefas:
-            QMessageBox.information(self, "Aviso", 
-                                  "Não há tarefas para desmarcar neste dia.")
-            return
-        
-        for tarefa in tarefas:
-            self.controller.marcar_tarefa_concluida(self.data_selecionada, tarefa["description"], False)
-        
-        self.atualizar_interface()
-        
-        QMessageBox.information(self, "Sucesso", 
-                              f"Todas as {len(tarefas)} tarefas do dia foram desmarcadas!")
     
     def atualizar_estatisticas(self):
         # (domingo a sábado)

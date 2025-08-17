@@ -90,11 +90,7 @@ class HistoricoAtividadesWindow(QMainWindow):
         layout.addWidget(tabela_group)
         
         layout_botoes = QHBoxLayout()
-        
-        btn_exportar = QPushButton("Exportar Dados")
-        btn_exportar.clicked.connect(self.exportar_dados)
-        layout_botoes.addWidget(btn_exportar)
-        
+                
         layout_botoes.addStretch()
         
         btn_voltar = QPushButton("Voltar")
@@ -209,35 +205,4 @@ Total de tarefas concluídas: {stats['total_tarefas_concluidas']}"""
         else:
             self.progresso_geral.setStyleSheet("QProgressBar::chunk { background-color: #F44336; }")
     
-    def exportar_dados(self):
-        try:
-            import csv
-            from PySide6.QtWidgets import QFileDialog
-            
-            file_path, _ = QFileDialog.getSaveFileName(
-                self, "Exportar Histórico", "historico_atividades.csv", 
-                "CSV Files (*.csv);;All Files (*)"
-            )
-            
-            if file_path:
-                with open(file_path, 'w', newline='', encoding='utf-8') as csvfile:
-                    writer = csv.writer(csvfile)
-                    
-                    writer.writerow(['Data', 'Total Tarefas', 'Concluídas', 'Progresso (%)', 'Status'])
-                    
-                    for row in range(self.tabela.rowCount()):
-                        data = self.tabela.item(row, 0).text()
-                        total = self.tabela.item(row, 1).text()
-                        concluidas = self.tabela.item(row, 2).text()
-                        
-                        progress_widget = self.tabela.cellWidget(row, 3)
-                        progresso = progress_widget.value()
-                        
-                        status = self.tabela.item(row, 4).text()
-                        
-                        writer.writerow([data, total, concluidas, progresso, status])
-                
-                QMessageBox.information(self, "Sucesso", f"Dados exportados para: {file_path}")
-        
-        except Exception as e:
-            QMessageBox.critical(self, "Erro", f"Erro ao exportar dados: {str(e)}")
+
