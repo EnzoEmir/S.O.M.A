@@ -23,6 +23,10 @@ class AdicionarTarefaWindow(QWidget):
         self.checkbox_semanal = QCheckBox("Semanal")
         
         self.checkbox_unico.setChecked(True)
+        
+        self.checkbox_importante = QCheckBox("     Marcar como Importante (evento especial)")
+        self.checkbox_importante.setStyleSheet("color: #e53e3e; font-weight: bold; margin-left: 20px;")
+        self.checkbox_importante.setEnabled(True)  
 
         self.label_data = QLabel(f"Data selecionada: {self.data_selecionada.toString('dd/MM/yyyy')}")
         self.label_data.setStyleSheet("font-weight: bold; color: #2c5282;")
@@ -43,6 +47,7 @@ class AdicionarTarefaWindow(QWidget):
         layout.addWidget(self.checkbox_unico)
         layout.addWidget(self.checkbox_diario)
         layout.addWidget(self.checkbox_semanal)
+        layout.addWidget(self.checkbox_importante)
         
         layout.addWidget(self.label_info)
         
@@ -54,6 +59,7 @@ class AdicionarTarefaWindow(QWidget):
         self.checkbox_unico.toggled.connect(lambda checked: self.gerenciar_checkboxes(self.checkbox_unico, checked))
         self.checkbox_diario.toggled.connect(lambda checked: self.gerenciar_checkboxes(self.checkbox_diario, checked))
         self.checkbox_semanal.toggled.connect(lambda checked: self.gerenciar_checkboxes(self.checkbox_semanal, checked))
+        self.checkbox_importante.toggled.connect(self.atualizar_info_tipo)
         self.btn_salvar.clicked.connect(self.salvar_tarefa)
         self.btn_cancelar.clicked.connect(self.close)
 
@@ -66,11 +72,21 @@ class AdicionarTarefaWindow(QWidget):
             if checkbox_ativa != self.checkbox_semanal:
                 self.checkbox_semanal.setChecked(False)
         
+        # Só permite marcar como importante se "Evento Único" estiver selecionado
+        if self.checkbox_unico.isChecked():
+            self.checkbox_importante.setEnabled(True)
+        else:
+            self.checkbox_importante.setEnabled(False)
+            self.checkbox_importante.setChecked(False)  # Desmarca automaticamente
+        
         self.atualizar_info_tipo()
 
     def atualizar_info_tipo(self):
         if self.checkbox_unico.isChecked():
-            self.label_info.setText("Evento único: aparecerá apenas na data selecionada")
+            if self.checkbox_importante.isChecked():
+                self.label_info.setText("Evento único IMPORTANTE: aparecerá na data selecionada destacado")
+            else:
+                self.label_info.setText("Evento único: aparecerá apenas na data selecionada")
         elif self.checkbox_diario.isChecked():
             self.label_info.setText("Diário: aparecerá todos os dias do calendário")
         elif self.checkbox_semanal.isChecked():
@@ -105,7 +121,8 @@ class AdicionarTarefaWindow(QWidget):
         nova_tarefa = {
             "description": descricao,
             "date": data,
-            "type": tipo
+            "type": tipo,
+            "importante": self.checkbox_importante.isChecked() if tipo == "single" else False
         }
 
         caminho_arquivo = "SOMA/minhas_datas.json"

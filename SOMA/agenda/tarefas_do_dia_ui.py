@@ -1,5 +1,6 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox
 from PySide6.QtCore import QDate
+from PySide6.QtGui import QColor
 from SOMA.agenda.delecao import remover_tarefa
 from SOMA.agenda.adicionar_tarefa_ui import AdicionarTarefaWindow
 import json
@@ -92,9 +93,19 @@ class TarefasDoDiaWindow(QWidget):
                 tipo_map = {"single": "Evento Único", "daily": "Diário", "weekly": "Semanal"}
                 tipo_texto = tipo_map.get(tarefa_info["type"], "Desconhecido")
                 
-                item_text = f"{tarefa_info['description']} ({tipo_texto})"
+                if tarefa_info["type"] == "single" and tarefa_info.get("importante", False):
+                    tipo_texto = "Evento IMPORTANTE"
+                    item_text = f" {tarefa_info['description']} ({tipo_texto})"
+                else:
+                    item_text = f"{tarefa_info['description']} ({tipo_texto})"
+                
                 item = QListWidgetItem(item_text)
                 item.setData(32, tarefa_info["index"])  
+                
+                if tarefa_info["type"] == "single" and tarefa_info.get("importante", False):
+                    item.setBackground(QColor("#ff6b6b"))  
+                    item.setForeground(QColor("white"))    
+                
                 self.lista_tarefas.addItem(item)
 
     def _filtrar_tarefas_do_dia(self, tarefas):

@@ -13,6 +13,11 @@ class Controller:
         self.formato_dias_importantes.setBackground(QColor("#a4bcdd"))
         self.formato_dias_importantes.setFontWeight(QFont.Bold)
         
+        self.formato_dias_muito_importantes = QTextCharFormat()
+        self.formato_dias_muito_importantes.setBackground(QColor("#ff6b6b"))  
+        self.formato_dias_muito_importantes.setFontWeight(QFont.Bold)
+        self.formato_dias_muito_importantes.setForeground(QColor("white"))  
+        
         self.view.calendario.activated.connect(self.abrir_tarefas_do_dia)         # duplo clique no calendário 
 
         self.carregar_tarefas_json()
@@ -61,7 +66,9 @@ class Controller:
 
             if tipo_tarefa == "single":
                 if data_original.year() == ano and data_original.month() == mes:
-                    self.view.calendario.setDateTextFormat(data_original, self.formato_dias_importantes)
+                    eh_importante = tarefa.get("importante", False)
+                    formato = self.formato_dias_muito_importantes if eh_importante else self.formato_dias_importantes
+                    self.view.calendario.setDateTextFormat(data_original, formato)
 
             elif tipo_tarefa == "daily":
                 dias_no_mes = QDate(ano, mes, 1).daysInMonth()
