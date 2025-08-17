@@ -24,6 +24,12 @@
       "description": "teste2",
       "date": "12-08-2025",
       "type": "daily"
+    },
+    {
+      "description": "teste_3",
+      "date": "18-08-2025",
+      "type": "single",
+      "importante": true
     }
   ],
   "atividades_concluidas": {
@@ -31,12 +37,24 @@
       "Reunião de início de projeto": {
         "concluida": true,
         "timestamp": "2025-08-15T02:33:16.039032"
+      },
+      "teste_3": {
+        "concluida": true,
+        "timestamp": "2025-08-17T16:32:03.376651"
+      },
+      "teste2": {
+        "concluida": true,
+        "timestamp": "2025-08-17T16:32:05.245494"
       }
     },
     "19-08-2025": {
       "teste": {
         "concluida": true,
-        "timestamp": "2025-08-14T21:07:03.657438"
+        "timestamp": "2025-08-17T16:34:14.577717"
+      },
+      "teste2": {
+        "concluida": true,
+        "timestamp": "2025-08-17T16:32:07.653618"
       }
     },
     "20-07-2025": {

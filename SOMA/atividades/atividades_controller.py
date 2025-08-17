@@ -195,3 +195,27 @@ class AtividadesController(QObject):
         
         if alteracoes_feitas:
             self.salvar_dados()
+    
+    def obter_eventos_importantes_proximos_30_dias(self):
+        data_atual = QDate.currentDate()
+        data_limite = data_atual.addDays(30)
+        eventos_importantes = []
+        
+        for tarefa in self.tarefas:
+            if tarefa["type"] == "single" and tarefa.get("importante", False):
+                data_tarefa = QDate.fromString(tarefa["date"], "dd-MM-yyyy")
+                
+                if data_atual <= data_tarefa <= data_limite:
+                    # Verifica se o evento não está concluído
+                    if not self.tarefa_esta_concluida(data_tarefa, tarefa["description"]):
+                        dias_restantes = data_atual.daysTo(data_tarefa)
+                        eventos_importantes.append({
+                            "descricao": tarefa["description"],
+                            "data": data_tarefa,
+                            "data_str": data_tarefa.toString("dd/MM/yyyy"),
+                            "dias_restantes": dias_restantes
+                        })
+        
+        #  Próximos primeiro
+        eventos_importantes.sort(key=lambda x: x["data"])
+        return eventos_importantes

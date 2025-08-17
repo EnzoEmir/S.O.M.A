@@ -102,6 +102,24 @@ class AtividadesWindow(QMainWindow):
         
         panel_direito.addWidget(atividades_group)
         
+        eventos_importantes_group = QGroupBox("Eventos Importantes - Próximos 30 Dias")
+        layout_eventos = QVBoxLayout(eventos_importantes_group)
+        
+        scroll_area_eventos = QScrollArea()
+        scroll_area_eventos.setWidgetResizable(True)
+        scroll_area_eventos.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area_eventos.setHorizontalScrollBarPolicy(Qt.ScrollBarAsNeeded)
+        scroll_area_eventos.setMaximumHeight(200)  
+        
+        self.eventos_widget = QWidget()
+        self.layout_eventos = QVBoxLayout(self.eventos_widget)
+        self.layout_eventos.setAlignment(Qt.AlignTop)
+        
+        scroll_area_eventos.setWidget(self.eventos_widget)
+        layout_eventos.addWidget(scroll_area_eventos)
+        
+        panel_direito.addWidget(eventos_importantes_group)
+        
         main_layout.addLayout(panel_esquerdo, 1)
         main_layout.addLayout(panel_direito, 2)
     
@@ -116,6 +134,7 @@ class AtividadesWindow(QMainWindow):
         self.atualizar_label_data()
         self.atualizar_progresso()
         self.atualizar_lista_atividades()
+        self.atualizar_eventos_importantes()
         self.atualizar_estatisticas()
     
     def atualizar_label_data(self):
@@ -152,6 +171,69 @@ class AtividadesWindow(QMainWindow):
         
         for tarefa in tarefas:
             self.criar_item_atividade(tarefa)
+    
+    def atualizar_eventos_importantes(self):
+        for i in reversed(range(self.layout_eventos.count())):
+            child = self.layout_eventos.itemAt(i)
+            if child and child.widget():
+                child.widget().setParent(None)
+        
+        eventos = self.controller.obter_eventos_importantes_proximos_30_dias()
+        
+        if not eventos:
+            label_vazio = QLabel("Nenhum evento importante nos próximos 30 dias.")
+            label_vazio.setAlignment(Qt.AlignCenter)
+            label_vazio.setStyleSheet("color: gray; font-style: italic; padding: 10px;")
+            self.layout_eventos.addWidget(label_vazio)
+            return
+        
+        for evento in eventos:
+            self.criar_item_evento_importante(evento)
+    
+    def criar_item_evento_importante(self, evento):
+        frame = QFrame()
+        frame.setFrameStyle(QFrame.Box)
+        frame.setStyleSheet("""
+            QFrame { 
+                border: 2px solid #ff6b6b; 
+                border-radius: 8px; 
+                margin: 3px; 
+                padding: 8px; 
+                background-color: #fff5f5;
+            }
+        """)
+        
+        layout = QVBoxLayout(frame)
+        
+        # Linha principal com descrição e data
+        linha_principal = QHBoxLayout()
+        
+        label_desc = QLabel(f"{evento['descricao']}")
+        label_desc.setStyleSheet("font-weight: bold; color: #c53030; font-size: 12px;")
+        label_desc.setWordWrap(True)
+        linha_principal.addWidget(label_desc, 1)
+        
+        label_data = QLabel(evento['data_str'])
+        label_data.setStyleSheet("color: #2d3748; font-weight: bold; font-size: 11px;")
+        linha_principal.addWidget(label_data)
+        
+        layout.addLayout(linha_principal)
+        
+        if evento['dias_restantes'] == 0:
+            texto_dias = "HOJE!!!"
+            cor_dias = "#c53030"
+        elif evento['dias_restantes'] == 1:
+            texto_dias = "Amanhã!"
+            cor_dias = "#e53e3e"
+        else:
+            texto_dias = f"Em {evento['dias_restantes']} dias"
+            cor_dias = "#805ad5"
+        
+        label_dias = QLabel(texto_dias)
+        label_dias.setStyleSheet(f"color: {cor_dias}; font-size: 10px; font-style: italic;")
+        layout.addWidget(label_dias)
+        
+        self.layout_eventos.addWidget(frame)
     
     def criar_item_atividade(self, tarefa):
         frame = QFrame()
@@ -194,6 +276,7 @@ class AtividadesWindow(QMainWindow):
         self.controller.marcar_tarefa_concluida(self.data_selecionada, descricao, concluida)
         
         self.atualizar_progresso()
+        self.atualizar_eventos_importantes()  
         self.atualizar_estatisticas()
         
         if concluida and self.controller.todas_tarefas_concluidas(self.data_selecionada):
