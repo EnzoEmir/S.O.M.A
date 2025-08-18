@@ -64,14 +64,14 @@ class AtividadesWindow(QMainWindow):
         panel_esquerdo.addWidget(group_estatisticas)
         
         bottom_buttons = QHBoxLayout()
+
+        self.btn_voltar = QPushButton("Voltar ao Menu Principal")
+        self.btn_voltar.clicked.connect(self.voltar_menu_principal)
+        bottom_buttons.addWidget(self.btn_voltar)
         
         self.btn_historico = QPushButton("Ver Histórico")
         self.btn_historico.clicked.connect(self.abrir_historico)
         bottom_buttons.addWidget(self.btn_historico)
-        
-        self.btn_voltar = QPushButton("Voltar ao Menu Principal")
-        self.btn_voltar.clicked.connect(self.voltar_menu_principal)
-        bottom_buttons.addWidget(self.btn_voltar)
         
         panel_esquerdo.addLayout(bottom_buttons)
         

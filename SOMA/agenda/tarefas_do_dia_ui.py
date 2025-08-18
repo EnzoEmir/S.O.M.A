@@ -53,12 +53,12 @@ class TarefasDoDiaWindow(QWidget):
         self.lista_tarefas = QListWidget()
         self.lista_tarefas.setStyleSheet("QListWidget::item { padding: 8px; border-bottom: 1px solid #ddd; }")
 
-        self.btn_remover = QPushButton("🗑️ Remover Tarefa")
-        self.btn_remover.setStyleSheet("background-color: #e53e3e; color: white; font-weight: bold;")
-        
         self.btn_adicionar = QPushButton("➕ Adicionar Tarefa")
         self.btn_adicionar.setStyleSheet("background-color: #38a169; color: white; font-weight: bold;")
 
+        self.btn_remover = QPushButton("🗑️ Remover Tarefa")
+        self.btn_remover.setStyleSheet("background-color: #e53e3e; color: white; font-weight: bold;")
+        
         self.btn_fechar = QPushButton("❌ Fechar")
 
         self.btn_remover.clicked.connect(self.remover_tarefa_selecionada)
@@ -104,7 +104,7 @@ class TarefasDoDiaWindow(QWidget):
                 
                 if tarefa_info["type"] == "single" and tarefa_info.get("importante", False):
                     item.setBackground(QColor("#ff6b6b"))  
-                    item.setForeground(QColor("white"))    
+                    item.setForeground(QColor("#ddc762"))    
                 
                 self.lista_tarefas.addItem(item)
 

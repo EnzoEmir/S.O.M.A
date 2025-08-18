@@ -20,13 +20,13 @@ class AdicionarTarefaWindow(QWidget):
         self.label_tipo = QLabel("Tipo de Tarefa:")
         
         self.checkbox_unico = QCheckBox("Evento Único")
-        self.checkbox_diario = QCheckBox("Diário")
         self.checkbox_semanal = QCheckBox("Semanal")
+        self.checkbox_diario = QCheckBox("Diário")
         
         self.checkbox_unico.setChecked(True)
         
         self.checkbox_importante = QCheckBox("     Marcar como Importante (evento especial)")
-        self.checkbox_importante.setStyleSheet("color: #e53e3e; font-weight: bold; margin-left: 20px;")
+        self.checkbox_importante.setStyleSheet("font-weight: bold; color: #e53e3e; margin-left: 20px;")
         self.checkbox_importante.setEnabled(True)  
 
         self.label_data = QLabel(f"Data selecionada: {self.data_selecionada.toString('dd/MM/yyyy')}")
