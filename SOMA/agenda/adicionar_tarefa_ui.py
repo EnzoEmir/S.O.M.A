@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLineEdit, QLabel, QCheckBox, QMessageBox
+from PySide6.QtCore import QDate
 import json
 import os
 
@@ -94,6 +95,33 @@ class AdicionarTarefaWindow(QWidget):
         else:
             self.label_info.setText("Por favor, selecione um tipo de tarefa")
 
+    def verificar_tarefa_duplicada(self, descricao, data_selecionada, dados):
+        
+        data_qdate = QDate.fromString(data_selecionada, "dd-MM-yyyy")
+        
+        for tarefa_existente in dados["tarefas"]:
+            # Ignorando maiúsculas/minúsculas
+            if tarefa_existente["description"].lower() == descricao.lower():
+                data_tarefa_existente = QDate.fromString(tarefa_existente["date"], "dd-MM-yyyy")
+                tipo_existente = tarefa_existente["type"]
+                
+                tarefa_aparece_na_data = False
+                
+                if tipo_existente == "single":
+                    tarefa_aparece_na_data = (data_tarefa_existente == data_qdate)
+                    
+                elif tipo_existente == "daily":
+                    tarefa_aparece_na_data = (data_qdate >= data_tarefa_existente)
+                    
+                elif tipo_existente == "weekly":
+                    # Tarefa semanal repete no mesmo dia da semana toda semana
+                    tarefa_aparece_na_data = (data_qdate >= data_tarefa_existente and data_qdate.dayOfWeek() == data_tarefa_existente.dayOfWeek())
+                
+                if tarefa_aparece_na_data:
+                    return True, tipo_existente
+        
+        return False, None
+
     def obter_tipo_selecionado(self):
         if self.checkbox_unico.isChecked():
             return "single"
@@ -140,6 +168,15 @@ class AdicionarTarefaWindow(QWidget):
                         
         except Exception as e:
             QMessageBox.warning(self, "Erro", f"Erro ao carregar arquivo: {e}")
+            return
+
+        tem_duplicata = self.verificar_tarefa_duplicada(descricao, data, dados)
+        
+        if tem_duplicata:
+            
+            QMessageBox.warning(self, "Tarefa Duplicada", 
+                              f"Já existe uma tarefa '{descricao}' em {self.data_selecionada.toString('dd/MM/yyyy')}!\n"
+                              "Por favor, escolha outro nome para evitar conflitos.")
             return
 
         dados["tarefas"].append(nova_tarefa)

@@ -1,76 +1,29 @@
 {
   "tarefas": [
     {
-      "description": "Reunião de início de projeto",
-      "date": "18-08-2025",
-      "type": "single"
-    },
-    {
-      "description": "Entregar relatório",
-      "date": "18-09-2025",
-      "type": "single"
-    },
-    {
       "description": "teste",
-      "date": "19-08-2025",
-      "type": "single"
-    },
-    {
-      "description": "teste",
-      "date": "17-08-2025",
-      "type": "weekly"
-    },
-    {
-      "description": "teste2",
-      "date": "12-08-2025",
-      "type": "daily"
-    },
-    {
-      "description": "teste_3",
       "date": "18-08-2025",
       "type": "single",
       "importante": true
+    },
+    {
+      "description": "teste2",
+      "date": "19-08-2025",
+      "type": "daily",
+      "importante": false
     }
   ],
   "atividades_concluidas": {
     "18-08-2025": {
-      "Reunião de início de projeto": {
+      "teste": {
         "concluida": true,
-        "timestamp": "2025-08-15T02:33:16.039032"
-      },
-      "teste_3": {
-        "concluida": true,
-        "timestamp": "2025-08-17T16:32:03.376651"
-      },
-      "teste2": {
-        "concluida": true,
-        "timestamp": "2025-08-17T16:32:05.245494"
+        "timestamp": "2025-08-17T23:10:08.429059"
       }
     },
     "19-08-2025": {
       "teste": {
-        "concluida": true,
-        "timestamp": "2025-08-17T16:34:14.577717"
-      },
-      "teste2": {
-        "concluida": true,
-        "timestamp": "2025-08-17T16:32:07.653618"
-      }
-    },
-    "20-07-2025": {
-      "teste": {
-        "concluida": true,
-        "timestamp": "2025-08-15T03:13:05.565217"
-      }
-    },
-    "17-08-2025": {
-      "teste": {
-        "concluida": true,
-        "timestamp": "2025-08-15T03:15:47.761936"
-      },
-      "teste2": {
-        "concluida": true,
-        "timestamp": "2025-08-15T03:15:49.113068"
+        "concluida": false,
+        "timestamp": "2025-08-17T23:10:05.208605"
       }
     }
   }
