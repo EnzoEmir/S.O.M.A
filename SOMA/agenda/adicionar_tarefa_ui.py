@@ -170,7 +170,7 @@ class AdicionarTarefaWindow(QWidget):
             QMessageBox.warning(self, "Erro", f"Erro ao carregar arquivo: {e}")
             return
 
-        tem_duplicata = self.verificar_tarefa_duplicada(descricao, data, dados)
+        tem_duplicata, tipo_existente = self.verificar_tarefa_duplicada(descricao, data, dados)
         
         if tem_duplicata:
             
