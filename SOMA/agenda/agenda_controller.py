@@ -1,6 +1,7 @@
 import json
-from PySide6.QtGui import QColor, QTextCharFormat, QFont
+from PySide6.QtGui import QTextCharFormat
 from PySide6.QtCore import QDate
+from collections import defaultdict
 
 class Controller:
     def __init__(self, view):
@@ -8,15 +9,6 @@ class Controller:
         
         self.tarefas = []
         self.filtro_atual = "all"
-
-        self.formato_dias_importantes = QTextCharFormat()
-        self.formato_dias_importantes.setBackground(QColor("#a4bcdd"))
-        self.formato_dias_importantes.setFontWeight(QFont.Bold)
-        
-        self.formato_dias_muito_importantes = QTextCharFormat()
-        self.formato_dias_muito_importantes.setBackground(QColor("#ff6b6b"))  
-        self.formato_dias_muito_importantes.setFontWeight(QFont.Bold)
-        self.formato_dias_muito_importantes.setForeground(QColor("white"))  
         
         self.view.calendario.activated.connect(self.abrir_tarefas_do_dia)         # duplo clique no calendário 
 
@@ -46,16 +38,14 @@ class Controller:
     def atualizar_grifados(self):
         tipo_filtro = self.filtro_atual
         self.view.calendario.setDateTextFormat(QDate(), QTextCharFormat()) 
-        self.aplicar_formatacao(tipo_filtro)
+        self.aplicar_formatacao_com_barras(tipo_filtro)
 
-    def atualizar_filtro(self, tipo_filtro):
-        self.filtro_atual = tipo_filtro
-        self.atualizar_grifados()
-
-    def aplicar_formatacao(self, tipo_filtro="all"):
+    def aplicar_formatacao_com_barras(self, tipo_filtro="all"):
         ano = self.view.calendario.yearShown()
-        mes = self.view.calendario.monthShown()
-
+        mes = self.view.calendario.monthShown()  
+        tarefas_por_data = defaultdict(set)
+        tarefas_importantes_por_data = defaultdict(bool)
+        
         for tarefa in self.tarefas:
             tipo_tarefa = tarefa["type"]
 
@@ -63,27 +53,37 @@ class Controller:
                 continue
 
             data_original = QDate.fromString(tarefa["date"], "dd-MM-yyyy")
-
+            eh_importante = tarefa.get("importante", False)
+            
             if tipo_tarefa == "single":
                 if data_original.year() == ano and data_original.month() == mes:
-                    eh_importante = tarefa.get("importante", False)
-                    formato = self.formato_dias_muito_importantes if eh_importante else self.formato_dias_importantes
-                    self.view.calendario.setDateTextFormat(data_original, formato)
-
+                    if eh_importante:
+                        tarefas_importantes_por_data[data_original] = True
+                    tarefas_por_data[data_original].add("single")            
             elif tipo_tarefa == "daily":
                 dias_no_mes = QDate(ano, mes, 1).daysInMonth()
                 for dia in range(1, dias_no_mes + 1):
                     data_atual = QDate(ano, mes, dia)
                     if data_atual >= data_original:
-                        self.view.calendario.setDateTextFormat(data_atual, self.formato_dias_importantes)
-
+                        if eh_importante:
+                            tarefas_importantes_por_data[data_atual] = True
+                        tarefas_por_data[data_atual].add("daily")
+                            
             elif tipo_tarefa == "weekly":
                 dia_semana = data_original.dayOfWeek()
                 dias_no_mes = QDate(ano, mes, 1).daysInMonth()
                 for dia in range(1, dias_no_mes + 1):
                     data_atual = QDate(ano, mes, dia)
                     if data_atual.dayOfWeek() == dia_semana and data_atual >= data_original:
-                        self.view.calendario.setDateTextFormat(data_atual, self.formato_dias_importantes)
+                        if eh_importante:
+                            tarefas_importantes_por_data[data_atual] = True
+                        tarefas_por_data[data_atual].add("weekly")
+        
+        self.view.calendario.atualizar_tarefas_data(tarefas_por_data, tarefas_importantes_por_data)
+
+    def atualizar_filtro(self, tipo_filtro):
+        self.filtro_atual = tipo_filtro
+        self.atualizar_grifados()
 
     def abrir_janela_adicionar(self):
         from SOMA.agenda.adicionar_tarefa_ui import AdicionarTarefaWindow 

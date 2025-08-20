@@ -1,13 +1,14 @@
-from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QCalendarWidget
+from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel
 from SOMA.agenda import agenda_controller
+from SOMA.agenda.calendario_customizado import CalendarioCustomizado
 
 class AgendaWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Agenda")
-        self.resize(360, 420)
+        self.resize(400, 480)
 
-        self.calendario = QCalendarWidget()
+        self.calendario = CalendarioCustomizado()
 
         self.btn_todos = QPushButton("Ver Todos")
         self.btn_diarios = QPushButton("Diários")
@@ -20,6 +21,30 @@ class AgendaWindow(QWidget):
         layout = QVBoxLayout(self) 
         
         layout.addWidget(self.calendario)
+        
+        legenda_layout = QHBoxLayout()
+        legenda_layout.addWidget(QLabel("Legendas:"))
+        
+        legenda_diario = QLabel("■ Diário")
+        legenda_diario.setStyleSheet("color: #B5EAD7; font-weight: bold;")
+        
+        legenda_semanal = QLabel("■ Semanal") 
+        legenda_semanal.setStyleSheet("color: #CDB4DB; font-weight: bold;")
+        
+        legenda_unico = QLabel("■ Único")
+        legenda_unico.setStyleSheet("color: #A0C4FF; font-weight: bold;")
+        
+        legenda_importante = QLabel("■ Importante")
+        legenda_importante.setStyleSheet("color: #F6E58D; font-weight: bold;")
+        
+        legenda_layout.addWidget(legenda_diario)
+        legenda_layout.addWidget(legenda_semanal)
+        legenda_layout.addWidget(legenda_unico)
+        legenda_layout.addWidget(legenda_importante)
+        legenda_layout.addStretch()
+        
+        layout.addLayout(legenda_layout)
+        
         layout.addWidget(self.btn_todos)
         layout.addWidget(self.btn_diarios)
         layout.addWidget(self.btn_semanais)
