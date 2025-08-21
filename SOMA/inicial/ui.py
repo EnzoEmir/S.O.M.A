@@ -26,7 +26,7 @@ class MainWindow(QMainWindow):
 
         # Widgets 
         
-        self.title = QLabel("Assistente Pessoal")
+        self.title = QLabel("S.O.M.A")
         self.title.setObjectName("mainTitle") # ID para o QSS
         self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
@@ -35,7 +35,11 @@ class MainWindow(QMainWindow):
         self.subtitle.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
         self.btn_agenda = QPushButton("Ver Agenda")
+        self.btn_agenda.setObjectName("agendaButton")
+        
         self.btn_gerenciar = QPushButton("Gerenciar Atividades")
+        self.btn_gerenciar.setObjectName("managerButton")
+        
         self.btn_exit = QPushButton("Sair")
         self.btn_exit.setObjectName("exitButton")
 
@@ -58,59 +62,88 @@ class MainWindow(QMainWindow):
         main_layout.addWidget(self.btn_exit)
 
     def setup_styles(self):
-        """
-        Centraliza todo o estilo (QSS) em um único lugar.
-        Esta é a forma mais organizada e fácil de manter o visual da aplicação.
-        """
         style_sheet = """
             /* Estilo geral da janela e fonte padrão */
             QMainWindow {
-                background-color: #EDE7F6;
-                font-family: Poppins, sans-serif; /* Fallback para fonte padrão */
+                background-color: #2B2D31;
+                font-family: Poppins, sans-serif;
             }
 
             /* Estilo do Título Principal */
             #mainTitle {
                 font-size: 26px;
-                font-weight: 600; /* SemiBold */
-                color: #424242;
+                font-weight: 600;
+                color: #ECECEC;
             }
             
             /* Estilo do Subtítulo */
             #subTitle {
                 font-size: 14px;
-                color: #757575;
+                color: #B9BBBE;
             }
             
             /* Estilo geral para botões de ação */
             QPushButton {
-                background-color: #7E57C2;
-                color: white;
+                color: #0F141A;
                 font-size: 14px;
-                font-weight: 500; /* Medium */
+                font-weight: 500;
                 border: none;
                 padding: 12px;
-                border-radius: 8px;
+                border-radius: 10px;
+                background-color: #A0C4FF;
             }
             
             QPushButton:hover {
-                background-color: #9575CD;
+                background-color: #90B9FF;
             }
             
             QPushButton:pressed {
-                background-color: #673AB7;
+                background-color: #7FAEFF;
+            }
+            
+            /* Botão Agenda (primário) - Azul bebê pastel */
+            #agendaButton {
+                background-color: #A0C4FF;
+                color: #0F141A;
+            }
+            
+            #agendaButton:hover {
+                background-color: #90B9FF;
+            }
+            
+            #agendaButton:pressed {
+                background-color: #7FAEFF;
+            }
+            
+            /* Botão Gerenciar (secundário) - Lavanda pastel */
+            #managerButton {
+                background-color: #CDB4DB;
+                color: #1A101C;
+            }
+            
+            #managerButton:hover {
+                background-color: #C4A7D6;
+            }
+            
+            #managerButton:pressed {
+                background-color: #BA9BD0;
             }
             
             /* Estilo específico para o botão de sair */
             #exitButton {
                 background-color: transparent;
-                color: #757575;
-                border: 1px solid #C5CAE9;
+                color: #B9BBBE;
+                border: 1px solid #474A51;
             }
             
             #exitButton:hover {
-                background-color: #C5CAE9;
-                color: #424242;
+                background-color: #3A3D44;
+                color: #ECECEC;
+                border-color: #5A5E67;
+            }
+            
+            #exitButton:pressed {
+                background-color: #33363C;
             }
         """
         self.setStyleSheet(style_sheet)
