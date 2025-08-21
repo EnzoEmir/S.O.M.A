@@ -1,5 +1,5 @@
-from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox
-from PySide6.QtCore import QDate
+from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QListWidget, QListWidgetItem, QMessageBox, QSizePolicy
+from PySide6.QtCore import QDate, Qt
 from PySide6.QtGui import QColor
 from SOMA.agenda.delecao import remover_tarefa
 from SOMA.agenda.adicionar_tarefa_ui import AdicionarTarefaWindow
@@ -43,41 +43,162 @@ class TarefasDoDiaWindow(QWidget):
         self.data_selecionada = data_selecionada
         self.gerenciador_tarefas = GerenciadorTarefas()
 
-        
-        self.setWindowTitle("Tarefas do Dia")
-        self.resize(450, 400)
-
-        self.label_data = QLabel(f"Tarefas para: {self.data_selecionada.toString('dd/MM/yyyy')}")
-        self.label_data.setStyleSheet("font-weight: bold; color: #2c5282; font-size: 14px;")
-
-        self.lista_tarefas = QListWidget()
-        self.lista_tarefas.setStyleSheet("QListWidget::item { padding: 8px; border-bottom: 1px solid #ddd; }")
-
-        self.btn_adicionar = QPushButton("➕ Adicionar Tarefa")
-        self.btn_adicionar.setStyleSheet("background-color: #38a169; color: white; font-weight: bold;")
-
-        self.btn_remover = QPushButton("🗑️ Remover Tarefa")
-        self.btn_remover.setStyleSheet("background-color: #e53e3e; color: white; font-weight: bold;")
-        
-        self.btn_fechar = QPushButton("❌ Fechar")
-
-        self.btn_remover.clicked.connect(self.remover_tarefa_selecionada)
-        self.btn_adicionar.clicked.connect(self.abrir_janela_adicionar)
-        self.btn_fechar.clicked.connect(self.close)
+        self.setup_ui()
+        self.setup_styles()
+        self.conectar_signals()
         
         self.carregar_tarefas_do_dia()
 
+    def setup_ui(self):
+        self.setWindowTitle("Tarefas do Dia")
+        self.resize(450, 500)
+        self.setMinimumSize(400, 450)  
 
-        layout = QVBoxLayout(self)
-        btn_layout = QHBoxLayout()
+        main_layout = QVBoxLayout(self)
+        main_layout.setContentsMargins(20, 20, 20, 20)
+        main_layout.setSpacing(15)
+
         
+        self.label_data = QLabel(f"Tarefas para: {self.data_selecionada.toString('dd/MM/yyyy')}")
+        self.label_data.setObjectName("dataTitle")
+        self.label_data.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.lista_tarefas = QListWidget()
+        self.lista_tarefas.setObjectName("taskList")
+
+        self.btn_adicionar = QPushButton("Adicionar Tarefa")
+        self.btn_adicionar.setObjectName("confirmButton")
+        
+        self.btn_remover = QPushButton("Remover Tarefa")
+        self.btn_remover.setObjectName("cancelButton")
+        
+        self.btn_fechar = QPushButton("Fechar")
+        self.btn_fechar.setObjectName("neutralButton")
+
+        for btn in [self.btn_adicionar, self.btn_remover, self.btn_fechar]:
+            btn.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
+            btn.setMinimumHeight(40)
+
+        btn_layout = QHBoxLayout()
+        btn_layout.setSpacing(10)
         btn_layout.addWidget(self.btn_remover)
         btn_layout.addWidget(self.btn_adicionar)
 
-        layout.addWidget(self.label_data)
-        layout.addWidget(self.lista_tarefas)
-        layout.addLayout(btn_layout)
-        layout.addWidget(self.btn_fechar)
+        main_layout.addWidget(self.label_data)
+        main_layout.addWidget(self.lista_tarefas, 1)  
+        main_layout.addLayout(btn_layout)
+        main_layout.addWidget(self.btn_fechar)
+
+    def setup_styles(self):
+        style_sheet = """
+            /* Estilo geral da janela e fonte */
+            QWidget {
+                background-color: #2B2D31;
+                font-family: Poppins, sans-serif;
+                color: #ECECEC; 
+            }
+
+            /* Título da data */
+            #dataTitle {
+                font-size: 16px;
+                font-weight: 600;
+                color: #ECECEC;
+                background-color: #383B42;
+                padding: 12px;
+                border-radius: 8px;
+                border: 1px solid #474A51;
+            }
+
+            /* Lista de tarefas */
+            #taskList {
+                background-color: #383B42;
+                border: 1px solid #474A51;
+                border-radius: 8px;
+                padding: 5px;
+                color: #ECECEC;
+                font-size: 13px;
+            }
+
+            #taskList::item {
+                padding: 10px;
+                border-bottom: 1px solid #474A51;
+                border-radius: 4px;
+                margin: 2px 0px;
+            }
+
+            #taskList::item:selected {
+                background-color: #5A6B7D;
+                color: #ECECEC;
+            }
+
+            #taskList::item:hover {
+                background-color: #474A51;
+            }
+
+            /* --- ESTILO DOS BOTÕES --- */
+            
+            /* Botão Neutro/Padrão  */
+            QPushButton {
+                background-color: #A0C4FF;
+                color: #0F141A;
+                font-size: 13px;
+                font-weight: 500;
+                border: none;
+                padding: 12px 15px;
+                border-radius: 8px;
+                min-height: 20px;
+            }
+            QPushButton:hover {
+                background-color: #90B9FF;
+            }
+            QPushButton:pressed {
+                background-color: #7FAEFF;
+            }
+
+            /* Botão de Ação/Confirmar (Verde) */
+            #confirmButton {
+                background-color: #4CAF50;
+                color: white;
+                font-weight: bold;
+            }
+            #confirmButton:hover { 
+                background-color: #45a049; 
+            }
+            #confirmButton:pressed { 
+                background-color: #3e8e41; 
+            }
+
+            /* Botão de Cancelar/Remover  */
+            #cancelButton {
+                background-color: #E57373;
+                color: white;
+                font-weight: bold;
+            }
+            #cancelButton:hover { 
+                background-color: #e56363; 
+            }
+            #cancelButton:pressed { 
+                background-color: #e55353; 
+            }
+
+            /* Botão Neutro/Secundário */
+            #neutralButton {
+                background-color: #A0C4FF;
+                color: #0F141A;
+            }
+            #neutralButton:hover {
+                background-color: #90B9FF;
+            }
+            #neutralButton:pressed {
+                background-color: #7FAEFF;
+            }
+        """
+        self.setStyleSheet(style_sheet)
+
+    def conectar_signals(self):
+        self.btn_remover.clicked.connect(self.remover_tarefa_selecionada)
+        self.btn_adicionar.clicked.connect(self.abrir_janela_adicionar)
+        self.btn_fechar.clicked.connect(self.close)
 
     def carregar_tarefas_do_dia(self):
         self.lista_tarefas.clear()
@@ -85,7 +206,9 @@ class TarefasDoDiaWindow(QWidget):
         tarefas_do_dia = self._filtrar_tarefas_do_dia(dados["tarefas"])
 
         if not tarefas_do_dia:
-            self.lista_tarefas.addItem("Nenhuma tarefa para este dia.")
+            item = QListWidgetItem("Nenhuma tarefa para este dia.")
+            item.setForeground(QColor("#B9BBBE"))  
+            self.lista_tarefas.addItem(item)
             self.btn_remover.setEnabled(False)
         else:
             self.btn_remover.setEnabled(True)
@@ -93,18 +216,25 @@ class TarefasDoDiaWindow(QWidget):
                 tipo_map = {"single": "Evento Único", "daily": "Diário", "weekly": "Semanal"}
                 tipo_texto = tipo_map.get(tarefa_info["type"], "Desconhecido")
                 
-                if tarefa_info["type"] == "single" and tarefa_info.get("importante", False):
-                    tipo_texto = "Evento IMPORTANTE"
-                    item_text = f" {tarefa_info['description']} ({tipo_texto})"
+                eh_importante = tarefa_info.get("importante", False)
+                if eh_importante:
+                    tipo_texto = "IMPORTANTE"
+                    item_text = f"{tarefa_info['description']} ({tipo_texto})"
                 else:
                     item_text = f"{tarefa_info['description']} ({tipo_texto})"
                 
                 item = QListWidgetItem(item_text)
                 item.setData(32, tarefa_info["index"])  
                 
-                if tarefa_info["type"] == "single" and tarefa_info.get("importante", False):
-                    item.setBackground(QColor("#ff6b6b"))  
-                    item.setForeground(QColor("#ddc762"))    
+                if eh_importante:
+                    item.setForeground(QColor("#F6E58D"))
+                    item.setBackground(QColor("#4A4832"))  
+                elif tarefa_info["type"] == "daily":
+                    item.setForeground(QColor("#B5EAD7"))
+                elif tarefa_info["type"] == "weekly":
+                    item.setForeground(QColor("#CDB4DB"))
+                elif tarefa_info["type"] == "single":
+                    item.setForeground(QColor("#A0C4FF"))
                 
                 self.lista_tarefas.addItem(item)
 
