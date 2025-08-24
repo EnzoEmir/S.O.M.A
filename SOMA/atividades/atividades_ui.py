@@ -3,8 +3,9 @@ from PySide6.QtCore import Qt, QDate
 from PySide6.QtGui import QFont
 from .atividades_controller import AtividadesController
 from SOMA.agenda.calendario_customizado import CalendarioCustomizado
+from SOMA.navegacao.stack import NavigableWidget
 
-class AtividadesWindow(QMainWindow):
+class AtividadesWindow(NavigableWidget):
     def __init__(self):
         super().__init__()
         self.controller = AtividadesController()
@@ -16,14 +17,9 @@ class AtividadesWindow(QMainWindow):
         self.atualizar_interface()
 
     def setup_ui(self):
-        self.setWindowTitle("Gerenciar Atividades do Dia")
-        self.setGeometry(200, 200, 900, 700)
-        self.setMinimumSize(800, 600)
+
         
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-        
-        main_layout = QHBoxLayout(central_widget)
+        main_layout = QHBoxLayout(self)
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(20)
         
@@ -149,14 +145,9 @@ class AtividadesWindow(QMainWindow):
     def setup_styles(self):
         style_sheet = """
             /* Estilo geral da janela */
-            QMainWindow {
-                background-color: #2B2D31;
-                font-family: Poppins, sans-serif;
-                color: #ECECEC;
-            }
-            
             QWidget {
                 background-color: #2B2D31;
+                font-family: Poppins, sans-serif;
                 color: #ECECEC;
             }
 
@@ -446,7 +437,7 @@ class AtividadesWindow(QMainWindow):
         self.calendario.clicked.connect(self.data_selecionada_mudou)
         self.calendario.currentPageChanged.connect(self.atualizar_grifados)
         self.btn_marcar_todas.clicked.connect(self.marcar_todas_concluidas)
-        self.btn_voltar.clicked.connect(self.voltar_menu_principal)
+        self.btn_voltar.clicked.connect(lambda: self.navegar_para("main"))
         self.btn_historico.clicked.connect(self.abrir_historico)
 
     def carregar_tarefas_json(self):
@@ -819,9 +810,6 @@ Streak Atual:
         self.historico_window = HistoricoAtividadesWindow()
         self.historico_window.show()
     
-    def voltar_menu_principal(self):
-        from SOMA.inicial.ui import MainWindow
-        
-        self.main_window = MainWindow()
-        self.main_window.show()
-        self.close()
+    def on_page_activated(self):
+        self.controller.carregar_dados()
+        self.atualizar_interface()

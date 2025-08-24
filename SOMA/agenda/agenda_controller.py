@@ -98,12 +98,3 @@ class Controller:
         data_selecionada = self.view.calendario.selectedDate()
         self.janela_tarefas = TarefasDoDiaWindow(self.view, data_selecionada)
         self.janela_tarefas.show()
-
-
-def voltar_main(current_window):
-    from SOMA.inicial.ui import MainWindow
-    
-    current_window.main = MainWindow()
-    current_window.main.show()
-    
-    current_window.close()

@@ -2,8 +2,9 @@ from PySide6.QtWidgets import QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QL
 from PySide6.QtCore import Qt
 from SOMA.agenda import agenda_controller
 from SOMA.agenda.calendario_customizado import CalendarioCustomizado
+from SOMA.navegacao.stack import NavigableWidget
 
-class AgendaWindow(QWidget):
+class AgendaWindow(NavigableWidget):
     def __init__(self):
         super().__init__()
         
@@ -13,13 +14,7 @@ class AgendaWindow(QWidget):
         self.controller = agenda_controller.Controller(self)
         self.conectar_signals()
 
-        self.main = None
-
     def setup_ui(self):
-        self.setWindowTitle("Agenda de Atividades")
-        self.resize(420, 550)
-        self.setMinimumSize(380, 500)  # Tamanho mínimo para evitar quebras
-
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(20, 20, 20, 20)
         main_layout.setSpacing(15)
@@ -241,7 +236,12 @@ class AgendaWindow(QWidget):
         
         self.btn_adicionar.clicked.connect(self.controller.abrir_janela_adicionar)
         self.btn_ver_tarefas.clicked.connect(self.controller.abrir_tarefas_do_dia)
-        self.btn_voltar.clicked.connect(lambda: agenda_controller.voltar_main(self))
+        self.btn_voltar.clicked.connect(lambda: self.navegar_para("main"))
 
         # Sinal do calendário
         self.calendario.currentPageChanged.connect(self.controller.atualizar_grifados)
+    
+    def on_page_activated(self):
+
+        self.controller.carregar_tarefas_json()
+        self.controller.atualizar_grifados()

@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QPushButton, QLabel, QSizePolicy
 from PySide6.QtCore import Qt
-from SOMA.inicial import controller
+from SOMA.navegacao.stack import NavigableWidget
 
-class MainWindow(QMainWindow):
+class MainWindow(NavigableWidget):
     def __init__(self):
         super().__init__()
 
@@ -10,17 +10,8 @@ class MainWindow(QMainWindow):
         self.setup_styles()
         self.conectar_signals()
 
-        # Referência para a próxima janela
-        self.agenda_window = None
-
     def setup_ui(self):
-        self.setWindowTitle("Assistente Pessoal")
-        self.resize(380, 450)
-
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-
-        main_layout = QVBoxLayout(central_widget)
+        main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(30, 30, 30, 30) 
         main_layout.setSpacing(20)
 
@@ -149,6 +140,13 @@ class MainWindow(QMainWindow):
         self.setStyleSheet(style_sheet)
 
     def conectar_signals(self):
-        self.btn_agenda.clicked.connect(lambda: controller.handle_view_agenda(self))
-        self.btn_gerenciar.clicked.connect(lambda: controller.handle_gerenciar_atividade(self))
-        self.btn_exit.clicked.connect(self.close)
+        self.btn_agenda.clicked.connect(lambda: self.navegar_para("agenda"))
+        self.btn_gerenciar.clicked.connect(lambda: self.navegar_para("atividades"))
+        self.btn_exit.clicked.connect(self.close_application)
+    
+    def close_application(self):
+        if self.navigation_stack:
+            self.navigation_stack.close()
+        else:
+            import sys
+            sys.exit()
