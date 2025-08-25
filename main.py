@@ -1,12 +1,30 @@
 from PySide6.QtWidgets import QApplication
+from PySide6.QtGui import QIcon
 from SOMA.navegacao.stack import NavigationStack
 from SOMA.inicial.ui import MainWindow
 from SOMA.agenda.agenda_ui import AgendaWindow
 from SOMA.atividades.atividades_ui import AtividadesWindow
 import sys
+import os
 
 def main():
     app = QApplication(sys.argv)
+    
+    # Define o ícone da aplicação
+    icon_path = os.path.join(os.path.dirname(__file__), "main.ico")
+    if os.path.exists(icon_path):
+        icon = QIcon(icon_path)
+        app.setWindowIcon(icon)
+        print(f"Ícone carregado: {icon_path}")
+    else:
+        print(f"Ícone não encontrado: {icon_path}")
+    
+    # Força o ícone na barra de tarefas no Windows
+    try:
+        from ctypes import windll
+        windll.shell32.SetCurrentProcessExplicitAppUserModelID("S.O.M.A.1.0")
+    except:
+        pass  # Ignora se não estiver no Windows
     
     navigation = NavigationStack()
     
