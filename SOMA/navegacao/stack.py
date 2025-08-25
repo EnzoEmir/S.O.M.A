@@ -4,7 +4,7 @@ class NavigationStack(QMainWindow):
 
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("S.O.M.A - Sistema Organizacional de Metas e Atividades")
+        self.setWindowTitle("S.O.M.A")
         self.setGeometry(200, 200, 1000, 700)
         self.setMinimumSize(800, 600)
         
