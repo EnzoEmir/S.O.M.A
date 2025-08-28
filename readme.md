@@ -1,5 +1,6 @@
 
-# Assistente Pessoal
+# **Sistema de Organização e Monitoramento de Atividades**
+
 
 Um assistente pessoal minimalista, feito em Python com PySide6, para organização da rotina diária.  
 ---
